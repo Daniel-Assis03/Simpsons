@@ -1,28 +1,14 @@
-#Carregando as Bibliotecas
 library(dplyr)
 library(ggplot2)
-#library(stats)
-#library(magick)
-#library(grid)
 library(tm)
-#library(treemap)
-#library(treemapify)
 library(wordcloud)
 library(tidytext)
 library(reshape2)
 library(circlize)
-#library(radarchart)
-#library(tidyr)
-#library(memisc)
 library(textdata)
 
 
-#Definindo  o diretorio de trabalho
-setwd("C:/Users/User/Desktop/Estudos/Analises/Simpsons Analise 2.0/")
-getwd()
-
-#Carregando os dados e visualizando (View)
-data_scripts <-read.csv("C:/Users/User/Desktop/Estudos/Analises/Simpsons Analise 2.0/Dataset/simpsons_script_lines.csv")
+data_scripts <-read.csv("simpsons_script_lines.csv")
 View(data_scripts)
 
 
@@ -40,8 +26,9 @@ data_scripts %>%
   labs(x="Personagem", y="N?mero de Falas", title="Personagens com mais falas em Os Simpsons") +
   coord_flip() +
   theme_bw()
-  image <- image_read("C:/Users/User/Desktop/Simpsons Analise 2.0/Images/Homer_Simpson_2006.png")
+  image <- image_read("Homer_Simpson_2006.png")
   grid.raster(image, x=0.91, y=0.31, height=0.4)
+
 
   #Personagens com mais falas excluindo a Familia Simpson e plotando um grafico de barras
   data_scripts %>%
@@ -55,23 +42,13 @@ data_scripts %>%
     labs(x="Personagem", y="N?mero de Falas", title="Personagens com mais falas em Os Simpsons") +
     coord_flip() +
     theme_bw()
-    image <- image_read("C:/Users/User/Desktop/Simpsons Analise 2.0/Images/download.png")
+    image <- image_read("download.png")
     grid.raster(image, x=0.85, y=0.39, height=0.4)
     
 
-#Verificando e criando uma vizualiza??o dos locais que mais aparecem no seriado
 
-pal<-c ("#35D6ED", "#58D68D")
-data_scripts%>%
-      count(raw_location_text)%>%
-      arrange((desc(n)))%>%
-      slice(1:10)%>%
-      treemap(index = "raw_location_text",
-              vSize = "n", palette = pal, 
-              type = "index",
-              title = "Locais com mais Apari??es")
      
-##################### ANALISE DE SENTIMENTOS#####################################
+##################### ANALISE DE SENTIMENTOS #####################################
 
 #Carregando a biblioteca de sentimentos "bing"
 get_sentiments("bing")
@@ -93,12 +70,12 @@ tokens %>%
     count(word,sentiment, sort = TRUE)%>%
     acast(word ~ sentiment, value.var  = "n", fill =1)%>%
     comparison.cloud(colors = c("#991D1D", "#327CDE"), max.words = 200)
-    image <- image_read("C:/Users/User/Desktop/Simpsons Analise 2.0/Images/image001.png")
+    image <- image_read("image001.png")
     grid.raster(image, x=0.85, y=0.31, height=0.25)
   
   
  
-#Filtrando os dados para obter informa??es somente da Familia Simpson
+#Filtrando os dados para obter informaçôes somente da Familia Simpson
 plotar <- tokens%>%
   inner_join(bing, "word")%>%
   filter(raw_character_text %in% c("Homer Simpson", "Marge Simpson", "Bart Simpson", "Lisa Simpson"))%>%
@@ -117,8 +94,7 @@ myColors = c("Homer Simpson" = "#FED517", "Marge Simpson" = "#23395d", "Bart Sim
 chordDiagram(plotar, grid.col = myColors, transparency = 0.4, annotationTrack = c("name", "grid"),
              annotationTrackHeight = c(0.01, 0.02))
 title("Os ?nimos da Familia Simpson")
-#image <- image_read("C:/Users/User/Desktop/Simpsons Analise 2.0/Images/crazyhomer.jpg")
-#grid.raster(image, x=0.875, y=0.18, height=0.45)
+
 
 
 #Carregando a biblioteca de sentimentos "nrc"
@@ -138,7 +114,7 @@ sentiments %>%
   labs(x =" Sentimentos ", y = "Frequ?ncia", title = "Os Sentimentos Mais Presentes" ) + 
   coord_flip()+
   theme_bw()
-  image <- image_read("C:/Users/User/Desktop/Simpsons Analise 2.0/Images/happyHomer.jpg")
+  image <- image_read("happyHomer.jpg")
   grid.raster(image, x=0.85, y=0.39, height=0.4)
   
 
@@ -161,71 +137,9 @@ sentiments %>%
     labs(x =" Sentimentos ", y = "Frequ?ncia", title = "Os Sentimentos Mais Presentes na Familia Simpson" ) + 
     coord_flip()+
     theme_minimal()
-  image <- image_read("C:/Users/User/Desktop/Simpsons Analise 2.0/Images/family.jpg")
+  image <- image_read("family.jpg")
   grid.raster(image, x=0.82, y=0.39, height=0.4)
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
- # char_sentiments <- tokens%>%
-  #  inner_join(nrc, "word")%>%
-   # filter(raw_character_text %in% c("Homer Simpson", "Marge Simpson", "Bart Simpson", "Lisa Simpson")
-    #      & !sentiment %in% c("positive", "negative"))%>%
-    #group_by(raw_character_text, sentiment)%>%
-    #count(raw_character_text, sentiment)%>%
-    #dplyr::select(raw_character_text, sentiment, char_sentiments_count = n)
-  
-  
-  
-#  total_char <- tokens %>%
- #   inner_join(nrc,"word")%>%
-  #  filter(raw_character_text %in% c("Homer Simpson", "Marge Simpson", "Bart Simpson", "Lisa Simpson")
-   #        & !sentiment %in% c("positive", "negative"))%>%
-  #  group_by(raw_character_text, sentiment)%>%
-   # count(raw_character_text)%>%
-  #  dplyr::select(raw_character_text, total = n)
-  
-  
-#  char_sentiments %>% 
- #   inner_join(total_char, by="raw_character_text") %>% 
-  #  mutate(percent = char_sentiments_count / total * 100 ) %>% 
-   # dplyr::select(char_sentiments_count, -total) %>% 
-    #spread(raw_character_text, percent) %>% 
-    #chartJSRadar(showToolTipLabel = T, main="Character and Sentiment Radar", maxScale=22, responsive=T,
-     #            addDots = T, 
-      #           colMatrix = grDevices::col2rgb(c("#FA8072","#04700A","#062D82","#99F1EB","#F39C12")),
-       #          lineAlpha = 0.7, polyAlpha = 0.05)
   
         
     
